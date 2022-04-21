@@ -3,6 +3,7 @@ import numpy as np
 from ldpc.bp_decoder import bp_decoder
 from scipy.sparse import spmatrix
 from scipy.special import comb as nCr
+from ldpc.c_util cimport char2numpy
 
 cdef class bposd_decoder(bp_decoder):
     '''
@@ -273,6 +274,9 @@ cdef class bposd_decoder(bp_decoder):
         for i in range(self.n):
             self.osdw_decoding[i]=self.osd0_decoding[i]
 
+        print(double2numpy(self.channel_probs,self.n))
+        print("Osd0", osd_min_weight, char2numpy(self.osd0_decoding,self.n))
+
         cdef double solution_weight
         cdef char *x
 
@@ -306,6 +310,8 @@ cdef class bposd_decoder(bp_decoder):
                 osd_min_weight=solution_weight
                 for i in range(self.n):
                     self.osdw_decoding[i]=self.y[i]
+            print("Osdw", solution_weight, char2numpy(self.y,self.n))
+
 
         mod2sparse_free(Ht)
         mod2sparse_free(U)
