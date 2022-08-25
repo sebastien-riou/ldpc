@@ -3,6 +3,7 @@ from tqdm import tqdm
 import json
 import time
 import datetime
+import scipy.sparse as sp
 
 from ldpc import bp_decoder
 from .mod2 import rank
@@ -21,6 +22,8 @@ def classical_decode_sim(
         error_bar_precision_cutoff=1e-2,
         output_dict={}
 ):
+
+    pcm=sp.csr_matrix(pcm).astype(np.uint8)
 
     output_dict['run_type']='classical_decode_sim'
 
@@ -65,7 +68,7 @@ def classical_decode_sim(
     start_time = time.time()
     save_time=start_time
     pbar=tqdm(range(1,target_runs+1),disable=False,ncols=0)
-    error=np.zeros(n).astype(int)
+    error=np.zeros(n).astype(np.uint8)
 
     for run_count in pbar:
 
